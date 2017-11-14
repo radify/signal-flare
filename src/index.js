@@ -20,7 +20,7 @@ const server = http.createServer(app);
 let localPeers = fromCallback(arp.table.bind(arp));
 
 app.get('/', (req, res) => res.format({
-  html: () => res.send(fs.readFileSync('../static/index.html').toString()),
+  html: () => res.send(fs.readFileSync('static/index.html').toString()),
   json: () => res.json({
     _links: {
       self: { href: '/' },
