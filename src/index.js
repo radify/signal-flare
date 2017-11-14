@@ -1,4 +1,4 @@
-const { map, pipe, prop, propEq, reject } = require('ramda');
+const { map, pipe, prop, propEq, reject, merge } = require('ramda');
 const http = require('http'),
       arp  = require('arpjs'),
       faye = require('faye'),
@@ -35,14 +35,13 @@ app.get('/identity', (req, res) => identity.then(json(res)));
 app.get('/peers', (req, res) => localPeers
   .then(peers => Promise.all(
     peers.map(
-      ({ ip }) => axios({ url: `http://${ip}/identity`, timeout: 2500 }).catch(e => ({
-        status: 'rejected',
-        err: e && e.message
-      }))
+      ({ ip }) => axios({ url: `http://${ip}:3113/identity`, timeout: 2500 })
+        .then(pipe(prop('data'), merge({ ip })))
+        .catch(e => ({ status: 'rejected', err: e && e.message }))
     )
   ))
   .then(pipe(reject(propEq('status', 'rejected')), json(res)))
-  .catch(e => res.send(e.message))
+  .catch(e => res.json({ message: e.message }))
 );
 app.get('/status', (req, res) => res.json({ ok: true }));
 
