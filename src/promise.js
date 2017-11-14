@@ -1,0 +1,1 @@
+exports.fromCallback = fn => new Promise((resolve, reject) => fn((e, data) => e ? reject(e) : resolve(data)));
