@@ -5,8 +5,7 @@ const http = require('http'),
       fs   = require('fs'),
       expr = require('express'),
       axios = require('axios'),
-      parser = require('body-parser'),
-      gravatar = require('gravatar');
+      parser = require('body-parser');
 
 const { fromCallback } = require('./promise');
 const { identity } = require('./identity');
@@ -33,13 +32,12 @@ app.get('/', (req, res) => res.format({
 }));
 
 app.get('/identity', (req, res) => identity.then(json(res)));
+
 app.get('/peers', (req, res) => localPeers
   .then(peers => Promise.all(
     peers.map(
       ({ ip }) => axios({ url: `http://${ip}:3113/identity`, timeout: 2500 })
-        .then(pipe(prop('data'), merge({ ip }), (data) => merge(data, {
-          avatar: data.gitEmail && gravatar.url(data.gitEmail) || null
-        })))
+        .then(pipe(prop('data'), merge({ ip })))
         .catch(e => ({ status: 'rejected', err: e && e.message }))
     )
   ))
