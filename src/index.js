@@ -6,12 +6,16 @@ const http = require('http'),
       expr = require('express'),
       axios = require('axios'),
       parser = require('body-parser');
+const package = require('../package.json');
 
 const { fromCallback } = require('./promise');
 const { identity } = require('./identity');
 
 const app = expr();
 const json = res => res.json.bind(res);
+
+const PORT = process.env.NODE_PORT || 3113;
+
 app.use(parser.json());
 
 const bayeux = new faye.NodeAdapter({ mount: '/s', timeout: 45 });
@@ -47,4 +51,6 @@ app.get('/peers', (req, res) => localPeers
 app.get('/status', (req, res) => res.json({ ok: true }));
 
 bayeux.attach(server);
-server.listen(3113, '0.0.0.0');
+server.listen(PORT, '0.0.0.0');
+
+console.log(`Signal Flare ${package.version} is running on port ${PORT}`);
