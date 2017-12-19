@@ -15,9 +15,8 @@ Signal Flare is a developer workflow automation tool. It runs a websocket server
  - Bi-directional working copy sync using `diff` & `stash`
  - Provide transactional syncing for remote users sharing a Slack channel, using Slack messages with embedded buttons
 
-## Notes / Questions
+## Notes
 
  - To check if a merge will cause conflicts: `git merge --no-commit --no-ff $BRANCH`
  - To check if a patch will cause conflicts: `git apply <file> --check`
- - Get user's human name: `dscacheutil -q user -a name $USER | grep gecos | sed 's/gecos: //'`
  - Git SHA for objects: [`git ls-tree master -lrt`](http://alblue.bandlem.com/2011/08/git-tip-of-week-objects.html)
